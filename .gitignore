@@ -1,0 +1,16 @@
+### JAVA and IntelliJ IDEA ###
+*.class
+*.jar
+hs_err_pid*
+*.iml
+.idea/*
+/target/
+.classpath
+.project
+.settings/*
+
+### Linux and KDE
+*~
+/dependency-reduced-pom.xml
+
+
