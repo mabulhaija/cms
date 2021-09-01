@@ -1,0 +1,16 @@
+<form #form="ngForm" (ngSubmit)="onsubmit(form)" autocomplete="off">
+
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>username</mat-label>
+    <input name="email" ngModel required #email="ngModel" type="email" matInput [(ngModel)]="userEmail"
+      placeholder="Ex. pat@example.com">
+  </mat-form-field>
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>password</mat-label>
+    <input name="password" ngModel required #password="ngModel" type="password" matInput [(ngModel)]="userPassword"
+      placeholder="Ex. pat@example.com">
+  </mat-form-field>
+
+  <button type="submit"> Log in
+  </button>
+</form>

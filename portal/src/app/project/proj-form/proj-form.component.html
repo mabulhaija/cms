@@ -1,0 +1,32 @@
+<form *ngIf="!loading" #f="ngForm" (ngSubmit)="handler(f)" class="example-form">
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Ptoject Name</mat-label>
+        <input name="name" ngModel required #name="ngModel" matInput placeholder="Project Name" [(ngModel)]="projName">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Project Description</mat-label>
+        <textarea name="des" ngModel required #des="ngModel" placeholder="Project Description" matInput
+            [(ngModel)]="projDes"></textarea>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isEdit" class="example-chip-list" appearance="fill">
+        <mat-label>Projects Employees</mat-label>
+        <mat-chip-list #chipList aria-label="value selection">
+            <mat-chip *ngFor="let value of values" [selectable]="selectable" [removable]="removable"
+                (removed)="remove(value)">
+                {{value.userName}}
+                <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
+            </mat-chip>
+            <input placeholder="add employee..." #valueInput [formControl]="fieldCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let value of filteredValues | async" [value]="value">
+                {{value.userName}} </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <button>{{isEdit? 'update' :'create'}}</button>
+    <button [routerLink]="['/project']" routerLinkActive="router-link-active">back</button>
+</form>

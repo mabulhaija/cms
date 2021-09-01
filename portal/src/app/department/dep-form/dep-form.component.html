@@ -1,0 +1,15 @@
+<form *ngIf="!loading" #f="ngForm" (ngSubmit)="handler(f)" class="example-form">
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Department Name</mat-label>
+        <input name="name" ngModel required #name="ngModel" matInput placeholder="Department Name"
+            [(ngModel)]="depName">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Department Description</mat-label>
+        <textarea name="des" ngModel required #des="ngModel" placeholder="Department Description" matInput
+            [(ngModel)]="depDes"></textarea>
+    </mat-form-field>
+    <button type="submit">{{isEdit? 'update' :'create'}}</button>
+    <button [routerLink]="['/department']" routerLinkActive="router-link-active" type="button">back</button>
+</form>

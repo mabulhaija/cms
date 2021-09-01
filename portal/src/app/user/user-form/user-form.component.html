@@ -1,0 +1,38 @@
+<form *ngIf="!loading" #f="ngForm" (ngSubmit)="handler(f)" class="example-form">
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Employee Name</mat-label>
+        <input name="name" ngModel required #name="ngModel" matInput placeholder="Employee Name" [(ngModel)]="empName">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input name="email" ngModel required #email="ngModel" type="email" matInput [(ngModel)]="empEmail"
+            placeholder="Ex. pat@example.com">
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>username</mat-label>
+        <input name="username" ngModel required #username="ngModel" type="text" matInput [(ngModel)]="empUsername"
+            placeholder="Ex. pat@example.com">
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>password</mat-label>
+        <input [disabled]="isEdit" name="password" ngModel required #password="ngModel" type="password" matInput
+            [(ngModel)]="empPassword" placeholder="Ex. pat@example.com">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Department</mat-label>
+        <mat-select name="dep" ngModel required #dep="ngModel" [(ngModel)]="empDep">
+            <mat-option *ngFor="let dep of deps" [value]="dep.id">{{dep.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Role</mat-label>
+        <mat-select name="role" ngModel required #role="ngModel" [(ngModel)]="empRole">
+            <mat-option value="MANAGER">Manager</mat-option>
+            <mat-option value="EMPLOYEE">Employee</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button type="submit">{{isEdit? 'update' :'create'}}</button>
+    <button [routerLink]="['/user']" routerLinkActive="router-link-active">back</button>
+</form>
