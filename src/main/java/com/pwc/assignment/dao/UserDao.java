@@ -3,7 +3,10 @@ package com.pwc.assignment.dao;
 import com.pwc.assignment.dao.mapper.UserMapper;
 import com.pwc.assignment.model.SystemUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -83,13 +86,31 @@ public class UserDao implements DaoOperations<SystemUser> {
 
     @Override
     public void deleteEntity(Integer id) {
-        jdbcTemplate.update("delete from system_users WHERE id = ? ;");
-
+        jdbcTemplate.update("delete from system_users where id = ? ", id);
     }
 
     public List<SystemUser> getDepartmentUsers(Integer departmentId, int size, int offset) {
         return jdbcTemplate.query("select id,user_name,department_id,department_name,name,email,status,role,added_by,added_date from system_users "
                         + " where department_id =? order by id desc limit ? offset ?;",
                 new UserMapper(), departmentId, size, offset);
+    }
+    public SystemUser findByUsername(String username) {
+
+        SystemUser user = null;
+        String sql = "select id,user_name,password,department_id,department_name,name,email,status,role,added_by,added_date from system_users "
+                + " where ( user_name=? or email=?)";
+        RowMapper<SystemUser> rowMapper = new BeanPropertyRowMapper<>(SystemUser.class);
+        try {
+            user = jdbcTemplate.queryForObject(sql, rowMapper, username, username);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return user;
+    }
+
+    public SystemUser getUserByUserName(String username) {
+        return jdbcTemplate.queryForObject("select id,user_name,department_id,department_name,name,email,status,role,added_by,added_date from system_users "
+                        + " where user_name = ?;",
+                new UserMapper(), username);
     }
 }

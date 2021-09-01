@@ -16,12 +16,7 @@ CREATE TYPE cms.roles AS ENUM ('MANAGER', 'EMPLOYEE');
 ALTER TYPE cms.roles OWNER TO postgres;
 
 CREATE CAST (character varying AS cms.roles) WITH INOUT AS ASSIGNMENT;
-------------------------------------------------------------------------------------------------------------------------
-CREATE TYPE cms.status AS ENUM ('ACTIVE', 'INACTIVE');
 
-ALTER TYPE cms.status OWNER TO postgres;
-
-CREATE CAST (character varying AS cms.status) WITH INOUT AS ASSIGNMENT;
 ------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE cms.departments
 (
@@ -51,7 +46,6 @@ department_id integer not null,
 department_name text not null,
 name text not null,
 email text not null UNIQUE,
-status cms.status NOT NULL DEFAULT 'ACTIVE'::cms.status,
 role cms.roles NOT NULL DEFAULT 'EMPLOYEE'::cms.roles,
 added_by integer NOT NULL,
 added_date TIMESTAMP without time zone DEFAULT now(),
@@ -104,7 +98,7 @@ CREATE TABLE cms.project_users
    project_id integer not null,
    user_id integer not null,
    project_name text COLLATE pg_catalog."default" NOT NULL,
-   user_email text COLLATE pg_catalog."default" NOT NULL,
+   user_name text COLLATE pg_catalog."default" NOT NULL,
    added_by integer NOT NULL,
    added_date timestamp without time zone NOT NULL DEFAULT now(),
    PRIMARY KEY (project_id,user_id),
@@ -121,3 +115,9 @@ TABLESPACE pg_default;
 
 ALTER TABLE cms.project_users  OWNER to postgres;
 ------------------------------------------------------------------------------------------------------------------------
+
+insert into cms.departments (id,name,description) values (1,"administration","project administration department");
+
+insert into cms.system_users (id,user_name,password,department_id,department_name,name,email,role,added_by)
+values (1,'sysadmin','$2a$10$FuvQtBBkrhtvMDDd3e5QsuSqBxNjpprwI38FOdNKmDtRBOx6BIcvK',1,'administration','system admin',
+'sysadmin@sample.com','MANAGER',1);

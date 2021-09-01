@@ -34,7 +34,7 @@ public class ProjectUserService {
     }
 
     public ProjectUsers insertEntity(ProjectUsers projectUsers) {
-        if (isPresent(projectUsers.getProjectId(), projectUsers.getUserId())) {
+        if (projectUsersDao.isPresent(projectUsers.getProjectId(), projectUsers.getUserId())) {
             throw new BadRequestException("user already assigned");
         }
         return projectUsersDao.insertEntity(projectUsers);

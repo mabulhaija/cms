@@ -1,10 +1,12 @@
 package com.pwc.assignment.model;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public class Project {
 
     private int id;
+    @NotBlank(message = "Name cannot be blank!")
     private String name;
     private String description;
     private int addedBy;

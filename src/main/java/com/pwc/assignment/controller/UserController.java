@@ -1,5 +1,6 @@
 package com.pwc.assignment.controller;
 
+import com.pwc.assignment.authentication.JwtTokenProvider;
 import com.pwc.assignment.model.SystemUser;
 import com.pwc.assignment.service.UserService;
 import com.pwc.assignment.service.response.Response;
@@ -9,6 +10,7 @@ import com.pwc.assignment.service.response.success.OkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -20,6 +22,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    private HttpServletRequest request;
 
     @GetMapping()
     public Response getUsers(@RequestParam(value = "size", required = false, defaultValue = "5") @Min(value = 5) @Max(value = 25) int size,
@@ -35,6 +39,8 @@ public class UserController {
 
     @PostMapping()
     public Response addNewUser(@NotNull(message = "Request body cannot be null") @Valid @RequestBody SystemUser systemUser) {
+        Integer userId = JwtTokenProvider.extractUserData(request).getId();
+        systemUser.setAddedBy(userId);
         return new CreatedResponse("User added successfully!", userService.insertEntity(systemUser));
     }
 

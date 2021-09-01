@@ -1,5 +1,6 @@
 package com.pwc.assignment.controller;
 
+import com.pwc.assignment.authentication.JwtTokenProvider;
 import com.pwc.assignment.model.Project;
 import com.pwc.assignment.service.ProjectService;
 import com.pwc.assignment.service.response.Response;
@@ -9,6 +10,7 @@ import com.pwc.assignment.service.response.success.OkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -19,7 +21,8 @@ import javax.validation.constraints.NotNull;
 public class ProjectController {
     @Autowired
     ProjectService projectService;
-
+    @Autowired
+    private HttpServletRequest request;
 
     @GetMapping()
     public Response getProjects(@RequestParam(value = "size", required = false, defaultValue = "5") @Min(value = 5) @Max(value = 25) int size,
@@ -35,6 +38,8 @@ public class ProjectController {
 
     @PostMapping()
     public Response addNewProject(@NotNull(message = "Request body cannot be null") @Valid @RequestBody Project project) {
+        Integer userId = JwtTokenProvider.extractUserData(request).getId();
+        project.setAddedBy(userId);
         return new CreatedResponse("Project added successfully!", projectService.insertEntity(project));
     }
 

@@ -2,6 +2,8 @@ package com.pwc.assignment.dao;
 
 import com.pwc.assignment.dao.mapper.ProjectUsersMapper;
 import com.pwc.assignment.model.ProjectUsers;
+import com.pwc.assignment.service.ProjectService;
+import com.pwc.assignment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,12 +19,16 @@ public class ProjectUsersDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    UserService userService;
+    @Autowired
+    ProjectService projectService;
 
 
     public List<ProjectUsers> getEntities(Integer projectId, int size, int offset) {
 
         return jdbcTemplate.query("select project_id,user_id,project_name,user_name,added_by,added_date from project_users "
-                        + " where project_id = ? order by id desc limit ? offset ?;",
+                        + " where project_id = ? order by project_id desc limit ? offset ?;",
                 new ProjectUsersMapper(), projectId, size, offset);
     }
 
@@ -34,6 +40,8 @@ public class ProjectUsersDao {
 
 
     public ProjectUsers insertEntity(ProjectUsers projectUsers) {
+        userService.isPresent(projectUsers.getUserId());
+        projectService.isPresent(projectUsers.getProjectId());
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement("insert into project_users (project_id , user_id ,added_by, project_name, user_name) values (?,?,?,(SELECT name from projects where id = ?),(SELECT user_name from system_users where id = ?))", Statement.RETURN_GENERATED_KEYS);
@@ -51,6 +59,7 @@ public class ProjectUsersDao {
     }
 
     public void deleteEntity(Integer projectId,Integer userId) {
-        jdbcTemplate.update("delete from departments where project_id = ? and user_id = ? ", projectId, userId);
+        isPresent(projectId, userId);
+        jdbcTemplate.update("delete from project_users where project_id = ? and user_id = ? ", projectId, userId);
     }
 }

@@ -1,5 +1,6 @@
 package com.pwc.assignment.controller;
 
+import com.pwc.assignment.authentication.JwtTokenProvider;
 import com.pwc.assignment.model.Department;
 import com.pwc.assignment.service.DepartmentService;
 import com.pwc.assignment.service.response.Response;
@@ -9,6 +10,7 @@ import com.pwc.assignment.service.response.success.OkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -19,6 +21,9 @@ import javax.validation.constraints.NotNull;
 public class DepartmentController {
     @Autowired
     DepartmentService departmentService;
+
+    @Autowired
+    private HttpServletRequest request;
 
 
     @GetMapping
@@ -41,6 +46,9 @@ public class DepartmentController {
 
     @PostMapping
     public Response addNewDepartment(@NotNull(message = "Request body cannot be null") @Valid @RequestBody Department department) {
+        Integer userId = JwtTokenProvider.extractUserData(request).getId();
+        department.setAddedBy(userId);
+
         return new CreatedResponse("Department added successfully!", departmentService.insertEntity(department));
     }
 
