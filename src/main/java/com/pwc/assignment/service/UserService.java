@@ -50,6 +50,9 @@ public class UserService implements UserDetailsService , ModelService<SystemUser
 
     @Override
     public SystemUser insertEntity(SystemUser systemUser) {
+        if (Strings.isBlank(systemUser.getPassword())) {
+            throw new BadRequestException("password can not be blank!");
+        }
         departmentService.isPresent(systemUser.getDepartmentId());
         return userDao.insertEntity(systemUser);
     }

@@ -8,7 +8,6 @@ public class SystemUser {
     private int id;
     @NotBlank(message = "user name can not be blank")
     private String userName;
-    @NotBlank(message = "password can not be blank")
     private String password;
     private int departmentId;
     private String departmentName;

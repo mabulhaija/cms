@@ -76,12 +76,12 @@ public class UserDao implements DaoOperations<SystemUser> {
     @Override
     public void updateEntity(SystemUser systemUser) {
 
-        jdbcTemplate.update("update system_users set  user_name = ? , password = ? , department_id = ?, name = ?," +
-                        "email = ?, role = ?, department_name = (SELECT name from departments where id = ?))" +
+        jdbcTemplate.update("update system_users set  user_name = ? , department_id = ?, name = ?," +
+                        "email = ?, role = ?, department_name = (SELECT name from departments where id = ?) " +
                         "  WHERE id = ? ",
 
-                systemUser.getUserName(), bcryptEncoder.encode(systemUser.getPassword()), systemUser.getDepartmentId(),
-                systemUser.getName(), systemUser.getEmail(), systemUser.getRole().name(), systemUser.getDepartmentId());
+                systemUser.getUserName(), systemUser.getDepartmentId(), systemUser.getName(),
+                systemUser.getEmail(), systemUser.getRole().name(), systemUser.getDepartmentId(), systemUser.getId());
     }
 
     @Override
